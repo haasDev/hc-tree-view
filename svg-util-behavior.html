@@ -91,6 +91,7 @@
     _getPolyLength(el) {
       const points = el.getAttribute('points').split(' ');
       let len = 0;
+
       if (points.length < 2) { return len; }
 
       const coord = (p) => {
