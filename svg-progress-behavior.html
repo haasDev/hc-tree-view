@@ -1,0 +1,108 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="./svg-util-behavior.html">
+
+<script>
+  /* global hc */
+  // Ensure our namespace is available
+  window.hc = window.hc || {};
+
+  const SvgProgressBehaviorImpl = {
+    properties: {
+      /**
+       * Value of circular progress bar.
+       */
+      value: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * Maximum of value.
+       */
+      max: {
+        type: Number,
+        value: 100
+      },
+
+      /**
+       * Stroke width of circle.
+       */
+      strokeWidth: {
+        type: Number,
+        value: 4
+      },
+
+      /**
+       * Starting angle of the progress.
+       */
+      angle: {
+        type: Number,
+        value: -90
+      },
+
+      _cx: {
+        type: Number,
+        value: null
+      },
+
+      _cy: {
+        type: Number,
+        value: null
+      },
+
+      _radius: {
+        type: Number,
+        computed: '_computeRadius(_cx, _cy, strokeWidth)'
+      },
+
+      _transform: {
+        type: String,
+        computed: '_computeTransform(angle, _cx, _cy)'
+      },
+
+      _dasharray: {
+        type: Number,
+        computed: '_computeDashArray(_radius)'
+      },
+
+      _dashoffset: {
+        type: Number,
+        computed: '_computeDashOffset(value, max, _dasharray)'
+      }
+    },
+
+    listeners: {
+      "iron-resize": "_onIronResize"
+    },
+
+
+
+
+    // Calculate the dash-array
+    _computeDashArray() {},
+
+    // Calculate the dash-offset
+    _computeDashOffset: function(value, max, dasharray) {
+      return (1 - value / max) * dasharray;
+    },
+
+    _computeRadius: function(cx, cy, strokeWidth) {
+      return cx && cy ? Math.max(0, Math.min(cx, cy) - strokeWidth / 2) : 0;
+    },
+
+    _computeTransform: function(angle, cx, cy) {
+      return cx && cy ? 'rotate(' + angle + ', ' + cx + ', ' + cy + ')' : '';
+    },
+
+    _onIronResize: function() {
+      if (this.offsetWidth && this.offsetHeight) {
+        this._cx = this.offsetWidth / 2;
+        this._cy = this.offsetHeight / 2;
+        this.$.circle.style.display = 'block';
+      }
+    }
+  };
+
+  hc.SvgProgressBehavior = [Polymer.IronResizableBehavior, SvgProgressBehaviorImpl];
+</script>

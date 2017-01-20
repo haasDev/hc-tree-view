@@ -1,0 +1,119 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  /* global hc */
+  // Ensure our namespace is available
+  window.hc = window.hc || {};
+
+  const SvgUtilBehavior = {
+
+    /**
+     * Helper function to get the total length of various SVG Elements
+     * @param {Element} el - `SVGElement` based elements
+     * @return {Number} Total length
+     */
+    getTotalLength(el) {
+      const {tagName} = el;
+      if (/rect/.test(tagName)) {
+        return _getRectLength(el);
+      } else if (/circle/.test(tagName)) {
+        return _getCircleLength(el);
+      } else if (/ellipse/.test(tagName)) {
+        return _getEllipseLength(el);
+      } else if (/polygon|polyline/.test(tagName)) {
+        return _getPolyLength(el);
+      } else if (/line/.test(tagName)) {
+        return _getLineLength(el);
+      } else if (/path/.test(tagName)) {
+        return el.getTotalLength();
+      }
+    },
+
+    // SVG Length Calculations
+    // -----------------------
+
+    /**
+     * Calculates the perimeter of a Rectangle (`<rect>`)
+     * Formula: `2(l+w)`
+     * @param {Element} el - `<rect>` Element
+     * @returns {Number} perimeter of the provided Element
+     * @private
+     */
+    _getRectLength(el) {
+      const l = el.getAttribute('height');
+      const w = el.getAttribute('width');
+      return 2*(l+w);
+    },
+    /**
+     * Calculates the length of a Line (`<line>`)
+     * Formula: `√((x2-x1)²+(y2-y1)²)`
+     * @param {Element} el - `<line>` Element
+     * @returns {Number} Length of the provided Element
+     * @private
+     */
+     _getLineLength(el) {
+       const x1 = el.getAttribute('x1');
+       const x2 = el.getAttribute('x2');
+       const y1 = el.getAttribute('y1');
+       const y2 = el.getAttribute('y2');
+       return Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1),2));
+     },
+     /**
+      * Calculates the circumference of a Circle (`<circle>`)
+      * Formula: `2πr`
+      * @param {Element} el - `<circle>` Element
+      * @returns {Number} circumference of the provided Element
+      * @private
+      */
+     _getCircleLength(el) {
+      const r = el.getAttribute('r');
+      return 2*Math.PI*r;
+    },
+    /**
+     * Calculates the circumference of a Ellipse (`<ellipse>`)
+     * Formula: `π(3(a+b)-√((a+3b)(3a+b)))`
+     * @param {Element} el - `<ellipse>` Element
+     * @returns {Number} circumference of the provided Element
+     * @private
+     */
+    _getEllipseLength(el) {
+      const a = el.getAttribute('rx');
+      const b = el.getAttribute('ry'),
+      return Math.PI*((3*(a+b)) - Math.sqrt( (a+(3*b))*((3*a)+b) ));
+    },
+    /**
+     * Calculates the perimeter of a Polygon/Polyline (`<polygon>`/`<polyline>`)
+     * Formula: `∑s`
+     * @param {Element} el - `<polygon>`/`<polyline>` Element
+     * @returns {Number} perimeter of the provided Element
+     * @private
+     */
+    _getPolyLength(el) {
+      const points = el.getAttribute('points').split(' ');
+      let len = 0;
+      if (points.length < 2) { return len; }
+
+      const coord = (p) => {
+        const c = p.split(',');
+        if (c.length !== 2 || isNaN(c[0]) || isNaN(c[1])) { return; }
+        return [parseFloat(c[0]), parseFloat(c[1])];
+      };
+
+      const dist = (c1, c2) => {
+        if (c1 && c2)
+          return Math.sqrt(Math.pow((c2[0]-c1[0]), 2) + Math.pow((c2[1]-c1[1]), 2));
+
+        return 0;
+      };
+
+      if (points.length > 2)
+        for (let i=0; i<points.length-1; i++) {
+          len += dist(coord(points[i]), coord(points[i+1]));
+        }
+
+      return len += dist(coord(points[0]), coord(points[points.length-1]));
+    },
+  };
+
+  hc.SvgUtilBehavior = SvgUtilBehavior;
+</script>
