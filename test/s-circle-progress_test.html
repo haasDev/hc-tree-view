@@ -4,25 +4,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>s-circle-progress test</title>
+    <title>hc-circle-progress test</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../s-circle-progress.html">
+    <link rel="import" href="../hc-circle-progress.html">
   </head>
   <body>
     <test-fixture id="basic">
       <template>
-        <s-circle-progress></s-circle-progress>
+        <hc-circle-progress></hc-circle-progress>
       </template>
     </test-fixture>
 
     <script>
-      suite('s-circle-progress', function() {
+      suite('hc-circle-progress', function() {
         test('instantiating the element works', function() {
           var element = fixture('basic');
-          assert.equal(element.is, 's-circle-progress');
+          assert.equal(element.is, 'hc-circle-progress');
         });
       });
     </script>

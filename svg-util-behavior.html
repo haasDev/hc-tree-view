@@ -15,15 +15,15 @@
     getTotalLength(el) {
       const {tagName} = el;
       if (/rect/.test(tagName)) {
-        return _getRectLength(el);
+        return t=this._getRectLength(el);
       } else if (/circle/.test(tagName)) {
-        return _getCircleLength(el);
+        return this._getCircleLength(el);
       } else if (/ellipse/.test(tagName)) {
-        return _getEllipseLength(el);
+        return this._getEllipseLength(el);
       } else if (/polygon|polyline/.test(tagName)) {
-        return _getPolyLength(el);
+        return this._getPolyLength(el);
       } else if (/line/.test(tagName)) {
-        return _getLineLength(el);
+        return this._getLineLength(el);
       } else if (/path/.test(tagName)) {
         return el.getTotalLength();
       }
@@ -40,9 +40,9 @@
      * @private
      */
     _getRectLength(el) {
-      const l = el.getAttribute('height');
-      const w = el.getAttribute('width');
-      return 2*(l+w);
+      const l = +el.getAttribute('height');
+      const w = +el.getAttribute('width');
+      return t=2*(l+w);
     },
     /**
      * Calculates the length of a Line (`<line>`)
@@ -52,10 +52,10 @@
      * @private
      */
      _getLineLength(el) {
-       const x1 = el.getAttribute('x1');
-       const x2 = el.getAttribute('x2');
-       const y1 = el.getAttribute('y1');
-       const y2 = el.getAttribute('y2');
+       const x1 = +el.getAttribute('x1');
+       const x2 = +el.getAttribute('x2');
+       const y1 = +el.getAttribute('y1');
+       const y2 = +el.getAttribute('y2');
        return Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1),2));
      },
      /**
@@ -66,7 +66,7 @@
       * @private
       */
      _getCircleLength(el) {
-      const r = el.getAttribute('r');
+      const r = +el.getAttribute('r');
       return 2*Math.PI*r;
     },
     /**
@@ -77,8 +77,8 @@
      * @private
      */
     _getEllipseLength(el) {
-      const a = el.getAttribute('rx');
-      const b = el.getAttribute('ry'),
+      const a = +el.getAttribute('rx');
+      const b = +el.getAttribute('ry');
       return Math.PI*((3*(a+b)) - Math.sqrt( (a+(3*b))*((3*a)+b) ));
     },
     /**

@@ -4,29 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>s-circle-progress demo</title>
+    <title>hc-circle-progress demo</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../s-circle-progress.html">
+    <link rel="import" href="../hc-circle-progress.html">
+    <link rel="import" href="../hc-square-progress.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>Basic s-circle-progress demo</h3>
+      <h3>Basic hc-circle-progress demo</h3>
       <demo-snippet>
         <template>
-          <s-circle-progress value="6" max="10">
+          <!-- <hc-circle-progress value="6" max="10">
             60%
-          </s-circle-progress>
+          </hc-circle-progress>
 
-          <s-circle-progress value="30" angle="90" stroke-width="8">
+          <hc-circle-progress value="30" angle="90" stroke-width="8">
             <b>30s</b>
-          </s-circle-progress>
+          </hc-circle-progress> -->
+          <hc-square-progress value="30" stroke-width="8">
+            <b>30s</b>
+          </hc-square-progress>
         </template>
       </demo-snippet>
     </div>
