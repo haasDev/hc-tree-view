@@ -1,13 +1,14 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="./svg-util-behavior.html">
+<link rel="import" href="svg-util-behavior.html">
 
 <script>
   /* global hc */
   // Ensure our namespace is available
   window.hc = window.hc || {};
 
-  const SvgProgressBehaviorImpl = {
+  /** @polymerBehavior */
+  hc.SvgProgressBehavior = [Polymer.IronResizableBehavior, hc.SvgUtilBehavior, {
     properties: {
       /**
        * Value of circular progress bar.
@@ -26,11 +27,23 @@
       },
 
       /**
+       * Minimum value
+       */
+      min: {
+        type: Number,
+        value: 0
+      },
+
+      /**
        * Stroke width of circle.
        */
       strokeWidth: {
         type: Number,
         value: 4
+      },
+      strokeUnit: {
+        type: String,
+        value: 'px'
       },
 
       _dasharray: {
@@ -39,41 +52,30 @@
 
       _dashoffset: {
         type: Number,
-        computed: '_computeDashOffset(value, max, _dasharray)'
+        computed: '_computeDashOffset(min, value, max, _dasharray)'
       }
     },
-
-    // listeners: {
-    //   "iron-resize": "_onIronResize"
-    // },
-
-
-
 
     // Calculate the dash-array
     _computeDashArray(el) {
       this._dasharray = this.getTotalLength(el);
     },
 
-    // Calculate the dash-offset
-    _computeDashOffset(value = this.value, max = this.max, dasharray = this._dasharray) {
-      return (1 - value / max) * dasharray;
-    },
-    //
-    // _computeRadius: function(cx, cy, strokeWidth) {
-    //   return cx && cy ? Math.max(0, Math.min(cx, cy) - strokeWidth / 2) : 0;
-    // },
-    //
-    // _computeTransform: function(angle, cx, cy) {
-    //   return cx && cy ? 'rotate(' + angle + ', ' + cx + ', ' + cy + ')' : '';
-    // },
+    /**
+     * Calculate the dash-offset
+     *
+     * @param {Number} min
+     * @param {Number} value
+     * @param {Number} max
+     * @param {Number} dasharray - Size of the total path length
+     * @returns {Number} progress of the dasharray
+     * @private
+     */
+    _computeDashOffset(min, value, max, dasharray) {
+      if (!value || !dasharray || !max) return dasharray;
+      return (dasharray - (((value - min) / (max - min)) * dasharray)) || dasharray;
+    }
 
-    // _onIronResize: function(callback) {
-    //   if (this.offsetWidth && this.offsetHeight) {
-    //     this._computeDashArray(this);
-    //   }
-    // }
-  };
+  }];
 
-  hc.SvgProgressBehavior = [Polymer.IronResizableBehavior, hc.SvgUtilBehavior, SvgProgressBehaviorImpl];
 </script>

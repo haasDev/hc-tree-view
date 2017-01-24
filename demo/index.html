@@ -10,26 +10,36 @@
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../hc-circle-progress.html">
     <link rel="import" href="../hc-square-progress.html">
+    <link rel="import" href="../hc-circle-progress.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>Basic hc-circle-progress demo</h3>
+      <h3>Basic <code>hc-circle-progress</code> demo</h3>
       <demo-snippet>
         <template>
-          <!-- <hc-circle-progress value="6" max="10">
-            60%
+          <hc-circle-progress value="6" max="10">
+            <img src="https://randomuser.me/api/portraits/men/79.jpg">
           </hc-circle-progress>
 
-          <hc-circle-progress value="30" angle="90" stroke-width="8">
-            <b>30s</b>
-          </hc-circle-progress> -->
+          <hc-circle-progress value="30" stroke-width="8">
+            <img src="https://randomuser.me/api/portraits/men/79.jpg">
+          </hc-circle-progress>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <h3>Basic <code>hc-square-progress</code> demo</h3>
+      <demo-snippet>
+        <template>
           <hc-square-progress value="30" stroke-width="8">
-            <b>30s</b>
+            30%
+          </hc-square-progress>
+          <hc-square-progress value="30" stroke-width="16">
+            <img src="https://randomuser.me/api/portraits/men/79.jpg">
           </hc-square-progress>
         </template>
       </demo-snippet>
