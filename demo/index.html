@@ -14,6 +14,11 @@
     <link rel="import" href="../hc-circle-progress.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
+      hc-circle-progress,
+      hc-square-progress {
+
+        margin: 24px;
+      }
     </style>
   </head>
   <body>
@@ -21,13 +26,13 @@
       <h3>Basic <code>hc-circle-progress</code> demo</h3>
       <demo-snippet>
         <template>
-          <hc-circle-progress value="6" max="10">
+          <!-- <hc-circle-progress value="6" max="10">
             <img src="https://randomuser.me/api/portraits/men/79.jpg">
           </hc-circle-progress>
 
           <hc-circle-progress value="30" stroke-width="8">
             <img src="https://randomuser.me/api/portraits/men/79.jpg">
-          </hc-circle-progress>
+          </hc-circle-progress> -->
         </template>
       </demo-snippet>
     </div>
@@ -35,9 +40,9 @@
       <h3>Basic <code>hc-square-progress</code> demo</h3>
       <demo-snippet>
         <template>
-          <hc-square-progress value="30" stroke-width="8">
+          <!-- <hc-square-progress value="30" stroke-width="16">
             30%
-          </hc-square-progress>
+          </hc-square-progress> -->
           <hc-square-progress value="30" stroke-width="16">
             <img src="https://randomuser.me/api/portraits/men/79.jpg">
           </hc-square-progress>

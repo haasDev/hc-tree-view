@@ -11,13 +11,20 @@
   hc.SvgProgressBehavior = [Polymer.IronResizableBehavior, hc.SvgUtilBehavior, {
     properties: {
       /**
+       * Minimum value
+       */
+      min: {
+        type: Number,
+        value: 0
+      },
+      /**
        * Value of circular progress bar.
        */
       value: {
         type: Number,
-        value: 0
+        value: 0,
+        reflectToAttribute: true
       },
-
       /**
        * Maximum of value.
        */
@@ -25,25 +32,12 @@
         type: Number,
         value: 100
       },
-
-      /**
-       * Minimum value
-       */
-      min: {
-        type: Number,
-        value: 0
-      },
-
       /**
        * Stroke width of circle.
        */
       strokeWidth: {
         type: Number,
         value: 4
-      },
-      strokeUnit: {
-        type: String,
-        value: 'px'
       },
 
       _dasharray: {
@@ -53,12 +47,35 @@
       _dashoffset: {
         type: Number,
         computed: '_computeDashOffset(min, value, max, _dasharray)'
+      },
+      _animationClass: {
+        type: String,
+        value: 'animate'
+      },
+      __progressPath: {
+        type: Object,
+        value() {
+          return this.$.progressPath;
+        }
+      },
+    },
+    observers: [
+      '_setAnimationClass(_animationClass, _dashoffset)'
+    ],
+
+    _setAnimationClass(animationClass, dashoffset) {
+      if (!isNaN(parseFloat(dashoffset))) {
+        Polymer.RenderStatus.afterNextRender(this, () => {
+          this.__progressPath.classList.add(animationClass);
+        });
       }
     },
 
     // Calculate the dash-array
-    _computeDashArray(el) {
-      this._dasharray = this.getTotalLength(el);
+    _getDashArray(el) {
+      const t = this.getTotalLength(el);
+      console.log(t)
+      return t;
     },
 
     /**
@@ -74,6 +91,10 @@
     _computeDashOffset(min, value, max, dasharray) {
       if (!value || !dasharray || !max) return dasharray;
       return (dasharray - (((value - min) / (max - min)) * dasharray)) || dasharray;
+    },
+
+    updateProgress() {
+      this._dasharray = this._getDashArray(this.__progressPath);
     }
 
   }];

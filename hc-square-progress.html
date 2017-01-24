@@ -15,54 +15,66 @@ Polymer-based web component displaying a circular progress bar.
 
     <style>
       :host {
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
-
         position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-        width: 80px;
-        height: 80px;
-        margin: 24px;
+        --hc-progress-square-size: 100px;
 
-        border-radius: 50%;
+        width: var(--hc-progress-square-size);
+        height: var(--hc-progress-square-size);
+      }
+      ::slotted(*) {
+        width: var(--hc-progress-square__slot, var(--hc-progress-square-size));
+        height: var(--hc-progress-square__slot, var(--hc-progress-square-size));
       }
 
       svg {
         position: absolute;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
 
         display: none;
       }
 
-      .Circle-background {
+      #square {
+        display: block;
+      }
+
+      .square__trail {
         stroke: var(--hc-square-progress-bg-stroke-color, --paper-grey-100);
       }
 
-      .Circle-foreground {
-        transition: stroke-dashoffset 150ms;
-
+      .square__progress {
         stroke: var(--hc-square-progress-stroke-color, --accent-color);
         stroke-linecap: var(--hc-square-progress-stroke-linecap);
       }
+      .animate {
+        transition: var(--hc-progress-square__progress-transitions, stroke-dashoffset 1400ms ease-in-out);
+      }
     </style>
 
-    <svg id="square" width="100%" height="100%">
-      <rect class="Circle-background"
-          width$="[[_cx]]"
-          height$="[[_cy]]"
-          fill="transparent"
-          stroke-width$="[[strokeWidth]][[strokeUnit]]"
-          />
-      <rect class="Circle-foreground"
-        id="circle-fg"
-          width$="[[_cx]]"
-          height$="[[_cy]]"
-          fill="transparent"
-          stroke-width$="[[strokeWidth]][[strokeUnit]]"
-          stroke-dasharray$="[[_dasharray]]"
-          stroke-dashoffset$="[[_dashoffset]]"
-          />
+    <svg id="square">
+      <rect class="square__trail"
+        width$="[[_width]]"
+        height$="[[_height]]"
+        fill="transparent"
+        stroke-width$="[[strokeWidth]][[strokeUnit]]"
+        />
+      <rect id="progressPath"
+        class="square__progress"
+        width$="[[_width]]"
+        height$="[[_height]]"
+        fill="transparent"
+        stroke-width$="[[strokeWidth]][[strokeUnit]]"
+        stroke-dasharray$="[[_dasharray]]"
+        stroke-dashoffset$="[[_dashoffset]]"
+        transform$="[[_transform]]"
+        />
     </svg>
 
     <slot></slot>
@@ -78,54 +90,55 @@ Polymer-based web component displaying a circular progress bar.
       ],
 
       properties: {
-        /**
-         * Starting angle of the progress.
-         */
-        angle: {
-          type: Number,
-          value: -90
+        overlayStroke: {
+          type: Boolean,
+          observer: '_redrawPath'
         },
-
-        _cx: {
+        _width: {
           type: Number,
           value: null
         },
 
-        _cy: {
+        _height: {
           type: Number,
           value: null
-        },
-
-        // _radius: {
-        //   type: Number,
-        //   computed: '_computeRadius(_cx, _cy, strokeWidth)'
-        // },
-
-        // _transform: {
-        //   type: String,
-        //   computed: '_computeTransform(angle, _cx, _cy)'
-        // }
+        }
       },
 
       listeners: {
-        "iron-resize": "_onIronResize"
+        "iron-resize": "_redrawPath"
       },
+      observers: [
+        'update(_width, _height)'
+      ],
 
-      _computeRadius: function(cx, cy, strokeWidth) {
-        return cx && cy ? Math.max(0, Math.min(cx, cy) - strokeWidth / 2) : 0;
-      },
-
-      _computeTransform: function(angle, cx, cy) {
-        return cx && cy ? 'rotate(' + angle + ', ' + cx + ', ' + cy + ')' : '';
-      },
-
-      _onIronResize: function() {
+      _redrawPath() {
         if (this.offsetWidth && this.offsetHeight) {
-          this._computeDashArray(this.$['circle-fg']);
-          this._cx = this.offsetWidth;
-          this._cy = this.offsetHeight;
-          this.$.square.style.display = 'block';
+          this._width = this.offsetWidth;
+          this._height = this.offsetHeight;
+
+          if (!this.overlayStroke) {
+            this.updateStyles({
+              '--hc-progress-square__slot': `${(this._width - this.strokeWidth)}px`
+            });
+          }
         }
+      },
+
+      update(width, height) {
+        if (!width || !height) { return; }
+                  console.log('update')
+
+        this.updateProgress();
+      },
+
+      ready() {
+        setTimeout(() => {
+          this.value = 60;
+        },5400);
+        // setTimeout(() => {
+        //   this.value = 99;
+        // },2400);
       }
     });
 

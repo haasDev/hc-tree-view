@@ -43,6 +43,7 @@
     _getRectLength(el) {
       const l = +el.getAttribute('height');
       const w = +el.getAttribute('width');
+      console.log('rect', l, w)
       return t=2*(l+w);
     },
     /**
