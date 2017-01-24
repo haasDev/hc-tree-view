@@ -33,37 +33,8 @@
         value: 4
       },
 
-      /**
-       * Starting angle of the progress.
-       */
-      angle: {
-        type: Number,
-        value: -90
-      },
-
-      _cx: {
-        type: Number,
-        value: null
-      },
-
-      _cy: {
-        type: Number,
-        value: null
-      },
-
-      _radius: {
-        type: Number,
-        computed: '_computeRadius(_cx, _cy, strokeWidth)'
-      },
-
-      _transform: {
-        type: String,
-        computed: '_computeTransform(angle, _cx, _cy)'
-      },
-
       _dasharray: {
-        type: Number,
-        computed: '_computeDashArray(_radius)'
+        type: Number
       },
 
       _dashoffset: {
@@ -72,36 +43,36 @@
       }
     },
 
-    listeners: {
-      "iron-resize": "_onIronResize"
-    },
+    // listeners: {
+    //   "iron-resize": "_onIronResize"
+    // },
 
 
 
 
     // Calculate the dash-array
-    _computeDashArray() {},
+    _computeDashArray(el) {
+      this._dasharray = this.getTotalLength(el);
+    },
 
     // Calculate the dash-offset
-    _computeDashOffset: function(value, max, dasharray) {
+    _computeDashOffset(value = this.value, max = this.max, dasharray = this._dasharray) {
       return (1 - value / max) * dasharray;
     },
+    //
+    // _computeRadius: function(cx, cy, strokeWidth) {
+    //   return cx && cy ? Math.max(0, Math.min(cx, cy) - strokeWidth / 2) : 0;
+    // },
+    //
+    // _computeTransform: function(angle, cx, cy) {
+    //   return cx && cy ? 'rotate(' + angle + ', ' + cx + ', ' + cy + ')' : '';
+    // },
 
-    _computeRadius: function(cx, cy, strokeWidth) {
-      return cx && cy ? Math.max(0, Math.min(cx, cy) - strokeWidth / 2) : 0;
-    },
-
-    _computeTransform: function(angle, cx, cy) {
-      return cx && cy ? 'rotate(' + angle + ', ' + cx + ', ' + cy + ')' : '';
-    },
-
-    _onIronResize: function() {
-      if (this.offsetWidth && this.offsetHeight) {
-        this._cx = this.offsetWidth / 2;
-        this._cy = this.offsetHeight / 2;
-        this.$.circle.style.display = 'block';
-      }
-    }
+    // _onIronResize: function(callback) {
+    //   if (this.offsetWidth && this.offsetHeight) {
+    //     this._computeDashArray(this);
+    //   }
+    // }
   };
 
   hc.SvgProgressBehavior = [Polymer.IronResizableBehavior, hc.SvgUtilBehavior, SvgProgressBehaviorImpl];

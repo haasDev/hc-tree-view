@@ -1,16 +1,16 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../paper-styles/default-theme.html">
+<link rel="import" href="./svg-progress-behavior.html">
 
 <!--
-`s-circle-progress`
+`hc-circle-progress`
 Polymer-based web component displaying a circular progress bar.
 
 @demo demo/index.html
 -->
 
-<dom-module id="s-circle-progress">
+<dom-module id="hc-circle-progress">
 <template>
 
 <style>
@@ -37,14 +37,14 @@ svg {
 }
 
 .Circle-background {
-  stroke: var(--s-circle-progress-bg-stroke-color, --paper-grey-100);
+  stroke: var(--hc-circle-progress-bg-stroke-color, --paper-grey-100);
 }
 
 .Circle-foreground {
   transition: stroke-dashoffset 150ms;
 
-  stroke: var(--s-circle-progress-stroke-color, --accent-color);
-  stroke-linecap: var(--s-circle-progress-stroke-linecap, round);
+  stroke: var(--hc-circle-progress-stroke-color, --accent-color);
+  stroke-linecap: var(--hc-circle-progress-stroke-linecap, round);
 }
 
 </style>
@@ -57,6 +57,7 @@ svg {
       fill="transparent"
       stroke-width$="[[strokeWidth]]" />
   <circle class="Circle-foreground"
+    id="circle-fg"
       r$="[[_radius]]"
       cx$="[[_cx]]"
       cy$="[[_cy]]"
@@ -67,43 +68,19 @@ svg {
       transform$="[[_transform]]" />
 </svg>
 
-<content></content>
+<slot></slot>
 
 </template>
 <script>
 
 Polymer({
-  is: 's-circle-progress',
+  is: 'hc-circle-progress',
 
   behaviors: [
-    Polymer.IronResizableBehavior
+    hc.SvgProgressBehavior
   ],
 
   properties: {
-    /**
-     * Value of circular progress bar.
-     */
-    value: {
-      type: Number,
-      value: 0
-    },
-
-    /**
-     * Maximum of value.
-     */
-    max: {
-      type: Number,
-      value: 100
-    },
-
-    /**
-     * Stroke width of circle.
-     */
-    strokeWidth: {
-      type: Number,
-      value: 4
-    },
-
     /**
      * Starting angle of the progress.
      */
@@ -130,29 +107,11 @@ Polymer({
     _transform: {
       type: String,
       computed: '_computeTransform(angle, _cx, _cy)'
-    },
-
-    _dasharray: {
-      type: Number,
-      computed: '_computeDashArray(_radius)'
-    },
-
-    _dashoffset: {
-      type: Number,
-      computed: '_computeDashOffset(value, max, _dasharray)'
     }
   },
 
   listeners: {
     "iron-resize": "_onIronResize"
-  },
-
-  _computeDashArray: function(radius) {
-    return 2 * Math.PI * radius;
-  },
-
-  _computeDashOffset: function(value, max, dasharray) {
-    return (1 - value / max) * dasharray;
   },
 
   _computeRadius: function(cx, cy, strokeWidth) {
@@ -165,6 +124,7 @@ Polymer({
 
   _onIronResize: function() {
     if (this.offsetWidth && this.offsetHeight) {
+      this._computeDashArray(this.$['circle-fg']);
       this._cx = this.offsetWidth / 2;
       this._cy = this.offsetHeight / 2;
       this.$.circle.style.display = 'block';
